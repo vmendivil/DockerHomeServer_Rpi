@@ -1,0 +1,6 @@
+# Files with examples
+*.env
+shared/.htpasswd
+traefik2/rules/middlewares.toml
+traefik2/acme/acme.json
+traefik2/traefik.log

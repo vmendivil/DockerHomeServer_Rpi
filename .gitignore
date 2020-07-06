@@ -4,3 +4,4 @@ shared/.htpasswd
 traefik2/rules/middlewares.toml
 traefik2/acme/acme.json
 traefik2/traefik.log
+traefik2/rules/middlewares-chains.toml

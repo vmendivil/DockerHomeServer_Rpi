@@ -41,3 +41,13 @@ Configuration
 Sample files: 
     .env: https://github.com/htpcBeginner/docker-traefik/blob/master/.env.example
     .bash_aliases: https://github.com/htpcBeginner/docker-traefik/blob/master/.bash_aliases.example
+
+# MIDDLEWARES
+
+- "traefik.http.middlewares.add-guacamole.addPrefix.prefix=/guacamole" # Add prefix to URL: subdomain.mydomain.com/guacamole
+
+# YML FILES
+
+    https://github.com/htpcBeginner/docker-traefik
+    https://github.com/CVJoint/traefik2
+    

@@ -12,7 +12,7 @@ networks:
 
 ########################### SERVICES
 services:
-# Traefik 2 - Reverse Proxy
+  # Traefik 2 - Reverse Proxy
   traefik:
     container_name: traefik
     image: traefik:chevrotin # the chevrotin tag refers to v2.2.x
@@ -101,4 +101,75 @@ services:
       ## Middlewares
       - "traefik.http.routers.traefik-rtr.middlewares=chain-basic-auth@file"
 
-      
+#  # Portainer - WebUI for Containers
+#  portainer:
+#    container_name: portainer
+#    image: portainer/portainer:latest
+#    restart: unless-stopped
+#    command: -H unix:///var/run/docker.sock
+#    networks:
+#      - t2_proxy
+#    security_opt:
+#      - no-new-privileges:true
+##    ports:
+##      - "$PORTAINER_PORT:9000"
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock:ro
+#      - $USERDIR/portainer/data:/data 
+#    environment:
+#      - TZ=$TZ
+#    labels:
+#      - "traefik.enable=true"
+#      ## HTTP Routers
+#      - "traefik.http.routers.portainer-rtr.entrypoints=https"
+#      - "traefik.http.routers.portainer-rtr.rule=Host(`portainer.$DOMAINNAME`)"
+#      - "traefik.http.routers.portainer-rtr.tls=true"
+#      ## Middlewares
+##      - "traefik.http.routers.portainer-rtr.middlewares=chain-no-auth@file" # No Authentication
+#      - "traefik.http.routers.portainer-rtr.middlewares=chain-basic-auth@file" # Basic Authentication
+##      - "traefik.http.routers.portainer-rtr.middlewares=chain-oauth@file" # Google OAuth 2.0
+#      ## HTTP Services
+#      - "traefik.http.routers.portainer-rtr.service=portainer-svc"
+#      - "traefik.http.services.portainer-svc.loadbalancer.server.port=9000"
+
+  # Heimdall - Unified Frontend Alternative
+  heimdall:
+    container_name: heimdall
+    image: linuxserver/heimdall:latest
+    restart: unless-stopped
+    networks:
+      - t2_proxy
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "$HEIMDALL_PORT:80"
+    volumes:
+      - $USERDIR/heimdall:/config
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+    labels:
+      - "traefik.enable=true"
+      ## HTTP Routers
+      - "traefik.http.routers.heimdall-rtr.entrypoints=https"
+      - "traefik.http.routers.heimdall-rtr.rule=Host(`heimdall.$DOMAINNAME`,`$DOMAINNAME`,`www.$DOMAINNAME`)"
+      - "traefik.http.routers.heimdall-rtr.tls=true"
+      ## Middlewares
+      - "traefik.http.routers.heimdall-rtr.middlewares=chain-basic-auth@file"
+      ## HTTP Services
+      - "traefik.http.routers.heimdall-rtr.service=heimdall-svc"
+      - "traefik.http.services.heimdall-svc.loadbalancer.server.port=80"
+
+  # Cloudflare DDNS - Dynamic DNS Updater
+  cf-ddns:
+    container_name: cf-ddns
+    image: oznu/cloudflare-ddns:latest
+    restart: always
+    environment:
+      - API_KEY=$CLOUDFLARE_API_TOKEN
+      - ZONE=$DOMAINNAME
+      - PROXIED=true
+      - RRTYPE=A
+      - DELETE_ON_STOP=false
+      - DNS_SERVER=1.1.1.1

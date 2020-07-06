@@ -45,7 +45,7 @@ services:
 #      - --providers.file.filename=/path/to/file # Load dynamic configuration from a file.
       - --providers.file.watch=true # Only works on top level files in the rules folder
 ##    Comment below line after first execution
-      - --certificatesResolvers.dns-cloudflare.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory # LetsEncrypt Staging Server - uncomment when testing
+#      - --certificatesResolvers.dns-cloudflare.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory # LetsEncrypt Staging Server - uncomment when testing
       - --certificatesResolvers.dns-cloudflare.acme.email=$CLOUDFLARE_EMAIL
       - --certificatesResolvers.dns-cloudflare.acme.storage=/acme.json
       - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.provider=cloudflare
@@ -73,8 +73,8 @@ services:
     volumes:
       - $USERDIR/traefik2/rules:/rules
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - $USERDIR/traefik2/acme/acme.json:/acme.json/
-      - $USERDIR/traefik2/traefik.log:/traefik.log/
+      - $USERDIR/traefik2/acme/acme.json:/acme.json # File must have chmod 600
+      - $USERDIR/traefik2/traefik.log:/traefik.log
       - $USERDIR/shared:/shared
     environment:
       - CF_API_EMAIL=$CLOUDFLARE_EMAIL
@@ -91,7 +91,7 @@ services:
       - "traefik.http.routers.traefik-rtr.rule=Host(`traefik.$DOMAINNAME`)"
       - "traefik.http.routers.traefik-rtr.tls=true"
 ##    Comment below line after first execution
-      - "traefik.http.routers.traefik-rtr.tls.certresolver=dns-cloudflare" # Comment out this line after first run of traefik to force the use of wildcard certs
+#      - "traefik.http.routers.traefik-rtr.tls.certresolver=dns-cloudflare" # Comment out this line after first run of traefik to force the use of wildcard certs
       - "traefik.http.routers.traefik-rtr.tls.domains[0].main=$DOMAINNAME"
       - "traefik.http.routers.traefik-rtr.tls.domains[0].sans=*.$DOMAINNAME"
 #      - "traefik.http.routers.traefik-rtr.tls.domains[1].main=$SECONDDOMAINNAME" # Pulls main cert for second domain

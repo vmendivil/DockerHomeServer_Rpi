@@ -32,7 +32,7 @@
     - Identify lines marked with initial commments using ##
     - Delete all content of "acme.json"
 
-##### REFERENCES
+# REFERENCES
 
 Configuration
     Configuration guide: https://www.smarthomebeginner.com/traefik-2-docker-tutorial/#4_Proper_DNS_Records

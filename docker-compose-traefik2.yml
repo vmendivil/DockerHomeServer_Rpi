@@ -213,6 +213,7 @@ services:
       ## HTTP Routers
       - "traefik.http.routers.dozzle-rtr.entrypoints=https"
       - "traefik.http.routers.dozzle-rtr.rule=Host(`dozzle.$DOMAINNAME`)"
+      - "traefik.http.routers.heimdall-rtr.tls=true"
       ## Middlewares
       - "traefik.http.routers.dozzle-rtr.middlewares=chain-basic-auth@file"
       ## HTTP Services

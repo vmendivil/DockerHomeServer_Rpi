@@ -1,9 +1,8 @@
 ################# Containers
-/heimdall/
-/heimdall_local/
+/heimdall*/
 /portainer/
-/mariadb/
 /fail2ban/
+/myownsite_*/
 
 ################# Configuration
 #*.env

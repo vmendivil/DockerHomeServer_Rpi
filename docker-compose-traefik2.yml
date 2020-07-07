@@ -223,70 +223,72 @@ services:
 
 ############################# MY OWN SITE: vmendivil.com
 
-#  # MariaDB
-#  myownsite_mariadb:
-#    container_name: myownsite_mariadb
-#    image: linuxserver/mariadb:latest
-#    restart: always
-#    networks:
-#      # - default
-#      # t2_proxy:
-#      #   ipv4_address: 192.168.90.250
-#      - t2_proxy
-#    security_opt:
-#      - no-new-privileges:true
-#    ports:
-#      - "$MYOWNSITE_MARIADB_PORT:3306"
-#    volumes:
-#      - $USERDIR/myownsite_mariadb/data:/config
-#      - $USERDIR/myownsite_mariadb/mysql:/var/lib/mysql
-#      - /etc/timezone:/etc/timezone:ro
-#      - /etc/localtime:/etc/localtime:ro
-#    environment:
-#      - PUID=$PUID
-#      - PGID=$PGID
-#      - MYSQL_ROOT_PASSWORD=$MARIADB_ROOT_PASSWORD
-#      - MYSQL_DATABASE=$WORDPRESS_DB_NAME
-#      - MYSQL_USER=$WORDPRESS_DB_USER
-#      - MYSQL_PASSWORD=$WORDPRESS_DB_PASSWORD
-#
-#  # WordPress
-#
-#  # Create file (volumes) php.conf.uploads.ini and paste below content before container creation:
-#  #file_uploads = On
-#  #memory_limit = 64M
-#  #upload_max_filesize = 64M
-#  #post_max_size = 64M
-#  #max_execution_time = 600
-#
-#  myownsite_wordpress:
-#    container_name: myownsite_wordpress
-#    image: wordpress
-#    ports:
-#      - $MYOWNSITE_WORDPRESS:80
-#    volumes:
+  # MariaDB
+  myownsite_mariadb:
+    container_name: myownsite_mariadb
+    image: linuxserver/mariadb:latest
+    restart: always
+    networks:
+      # - default
+      # t2_proxy:
+      #   ipv4_address: 192.168.90.250
+      - t2_proxy
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "$MYOWNSITE_MARIADB_PORT:3306"
+    volumes:
+      - $USERDIR/myownsite_mariadb/data:/config
+      - $USERDIR/myownsite_mariadb/mysql:/var/lib/mysql
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - MYSQL_ROOT_PASSWORD=$MARIADB_ROOT_PASSWORD
+      - MYSQL_DATABASE=$WORDPRESS_DB_NAME
+      - MYSQL_USER=$WORDPRESS_DB_USER
+      - MYSQL_PASSWORD=$WORDPRESS_DB_PASSWORD
+
+  # WordPress
+
+  # Create file (volumes) php.conf.uploads.ini and paste below content before container creation:
+  #file_uploads = On
+  #memory_limit = 64M
+  #upload_max_filesize = 64M
+  #post_max_size = 64M
+  #max_execution_time = 600
+
+  myownsite_wordpress:
+    container_name: myownsite_wordpress
+    image: wordpress
+    ports:
+      - $MYOWNSITE_WORDPRESS:80
+    volumes:
 #      - $USERDIR/myownsite_wordpress/config/php.conf.uploads.ini:/usr/local/etc/php/conf.d/uploads.ini # Create file in advance
-#      - $USERDIR/myownsite_wordpress/wp-app:/var/www/html # Full wordpress project
-#    environment:
-#      WORDPRESS_DB_HOST: myownsite_mariadb
-#      WORDPRESS_DB_NAME: $WORDPRESS_DB_NAME
-#      WORDPRESS_DB_USER: $WORDPRESS_DB_USER
-#      WORDPRESS_DB_PASSWORD: $WORDPRESS_DB_PASSWORD
-#    labels:
-#      - "traefik.enable=true"
-#      ## HTTP Routers
-#      - "traefik.http.routers.myownsite_wordpress-rtr.entrypoints=https"
-#      - "traefik.http.routers.myownsite_wordpress-rtr.rule=Host(`myownsite.$DOMAINNAME`,`$DOMAINNAME`,`www.$DOMAINNAME`)"
-#      - "traefik.http.routers.myownsite_wordpress-rtr.tls=true"
-#      ## Middlewares
-#      - "traefik.http.routers.myownsite_wordpress-rtr.middlewares=chain-no-auth@file"
-#      ## HTTP Services
-#      - "traefik.http.routers.myownsite_wordpress-rtr.service=myownsite_wordpress-svc"
-#      - "traefik.http.services.myownsite_wordpress-svc.loadbalancer.server.port=80"
-#    depends_on:
-#      - myownsite_mariadb
-#    networks:
-#      - t2_proxy
+      - $USERDIR/myownsite_wordpress/wp-app:/var/www/html # Full wordpress project
+    environment:
+      WORDPRESS_DB_HOST: myownsite_mariadb
+      WORDPRESS_DB_NAME: $WORDPRESS_DB_NAME
+      WORDPRESS_DB_USER: $WORDPRESS_DB_USER
+      WORDPRESS_DB_PASSWORD: $WORDPRESS_DB_PASSWORD
+    labels:
+      - "traefik.enable=true"
+      ## HTTP Routers
+      - "traefik.http.routers.myownsite_wordpress-rtr.entrypoints=https"
+      - "traefik.http.routers.myownsite_wordpress-rtr.rule=Host(`myownsite.$DOMAINNAME`)"
+      - "traefik.http.routers.myownsite_wordpress-rtr.tls=true"
+      ## Middlewares
+      - "traefik.http.routers.myownsite_wordpress-rtr.middlewares=chain-no-auth@file"
+      ## HTTP Services
+      - "traefik.http.routers.myownsite_wordpress-rtr.service=myownsite_wordpress-svc"
+      - "traefik.http.services.myownsite_wordpress-svc.loadbalancer.server.port=80"
+    depends_on:
+      - myownsite_mariadb
+    links:
+      - myownsite_mariadb
+    networks:
+      - t2_proxy
 
 ############################# SYSTEM
 

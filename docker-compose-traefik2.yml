@@ -262,6 +262,7 @@ services:
   myownsite_wordpress:
     container_name: myownsite_wordpress
     image: wordpress
+    restart: always
     ports:
       - $MYOWNSITE_WORDPRESS:80
     volumes:

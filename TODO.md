@@ -5,3 +5,4 @@
 > Add Guacamole to yml file
 > Add NetData
 > Add WordPress with MariaDB
+> Configure network adapter to properly set all its parameters

@@ -1,9 +1,10 @@
-# Containers
+################# Containers
 /heimdall/
 /heimdall_local/
 /portainer/
+/mariadb/
 
-# Files with examples
+################# Configuration
 #*.env
 #shared/.htpasswd
 #traefik2/rules/middlewares.toml

@@ -1,8 +1,11 @@
 version: "3.8"
 
+############################# INSTRUCTIONS AND NOTES
+
 ## When ## found, uncomment for first execution, comment for further executions.
 
-########################### NETWORKS
+############################# NETWORKS
+
 networks:
   t2_proxy:
     external:
@@ -10,8 +13,12 @@ networks:
   default:
     driver: bridge
 
-########################### SERVICES
+############################# SERVICES
+
 services:
+
+############################# INFRASTRUCTURE
+
   # Traefik 2 - Reverse Proxy
   traefik:
     container_name: traefik
@@ -101,6 +108,8 @@ services:
       ## Middlewares
       - "traefik.http.routers.traefik-rtr.middlewares=chain-basic-auth@file"
 
+############################# FRONTENDS
+
   # Portainer - WebUI for Containers
   portainer:
     container_name: portainer
@@ -176,19 +185,32 @@ services:
       - PUID=$PUID
       - PGID=$PGID
       - TZ=$TZ
-    
-  # Cloudflare DDNS - Dynamic DNS Updater
-  cf-ddns:
-    container_name: cf-ddns
-    image: oznu/cloudflare-ddns:latest
+
+############################# DATABASES
+
+# MariaDB - MySQL Database
+  mariadb:
+    container_name: mariadb
+    image: linuxserver/mariadb:latest
     restart: always
+    networks:
+      # - default
+      t2_proxy:
+        ipv4_address: 192.168.90.250
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "$MARIADB_PORT:3306"
+    volumes:
+      - $USERDIR/mariadb/data:/config
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     environment:
-      - API_KEY=$CLOUDFLARE_API_TOKEN
-      - ZONE=$DOMAINNAME
-      - PROXIED=true
-      - RRTYPE=A
-      - DELETE_ON_STOP=false
-      - DNS_SERVER=1.1.1.1
+      - PUID=$PUID
+      - PGID=$PGID
+      - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
+
+############################# SYSTEM
 
   # Dozzle - Real-time Docker Log Viewer
   dozzle:
@@ -219,3 +241,36 @@ services:
       ## HTTP Services
       - "traefik.http.routers.dozzle-rtr.service=dozzle-svc"
       - "traefik.http.services.dozzle-svc.loadbalancer.server.port=8080"
+
+############################# MAINTENANCE
+
+  # Cloudflare DDNS - Dynamic DNS Updater
+  cf-ddns:
+    container_name: cf-ddns
+    image: oznu/cloudflare-ddns:latest
+    restart: always
+    environment:
+      - API_KEY=$CLOUDFLARE_API_TOKEN
+      - ZONE=$DOMAINNAME
+      - PROXIED=true
+      - RRTYPE=A
+      - DELETE_ON_STOP=false
+      - DNS_SERVER=1.1.1.1
+  
+  # Ouroboros - Automatic Docker Container Updates
+  ouroboros:
+    image: pyouroboros/ouroboros:latest
+    container_name: ouroboros
+    restart: unless-stopped
+    networks:
+      - default
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      TZ: $TZ
+      INTERVAL: 86400
+      LOG_LEVEL: debug
+      SELF_UPDATE: "true"
+      CLEANUP: "true"
+      IGNORE: traefik
+#      NOTIFIERS: "tgram://$TGRAM_BOT_TOKEN/$TGRAM_CHAT_ID/"

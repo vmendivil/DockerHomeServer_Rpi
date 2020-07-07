@@ -1,3 +1,8 @@
+# Containers
+/heimdall/
+/heimdall_local/
+/portainer/
+
 # Files with examples
 *.env
 shared/.htpasswd

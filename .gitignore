@@ -3,6 +3,7 @@
 /heimdall_local/
 /portainer/
 /mariadb/
+/fail2ban/
 
 ################# Configuration
 #*.env

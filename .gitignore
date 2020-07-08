@@ -3,6 +3,7 @@
 /portainer/
 /fail2ban/
 /myownsite_*/
+/zoneminder*/
 
 ################# Configuration
 #*.env

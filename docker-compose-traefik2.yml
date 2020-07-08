@@ -341,6 +341,44 @@ services:
     networks:
       - t2_proxy
 
+############################# SMART HOME
+
+  # Zoneminder
+  zoneminder_test:
+    image: sgarzarella/zoneminder-armhf:latest
+    container_name: zoneminder_test
+    restart: unless-stopped
+    networks:
+      - t2_proxy
+    security_opt:
+      - no-new-privileges:true
+    privileged: true # TODO: Validate definition is correct
+    ports:
+      - 8444:443
+      - 8087:80
+      - 9002:9000
+    environment:
+      TZ: $TZ
+      SHMEM: "50%"
+      SSL_EVENTS: "1"
+      PUID: $PUID
+      PGID: $PGID
+    volumes:
+      - $USERDIR/zoneminder_test:/config
+      - $USERDIR/zoneminder_test/cache:/var/cache/zoneminder
+    labels:
+      - "traefik.enable=true"
+      ## HTTP Routers
+      - "traefik.http.routers.zoneminder_test-rtr.entrypoints=https"
+      - "traefik.http.routers.zoneminder_test-rtr.rule=Host(`zonemindertest.$DOMAINNAME`)"
+      - "traefik.http.routers.zoneminder_test-rtr.tls=true"
+      ## Middlewares
+      - "traefik.http.middlewares.add-zm.addprefix.prefix=/zm" # URL prefix subdomain.domain.com/prefix
+      - "traefik.http.routers.zoneminder_test-rtr.middlewares=chain-oauth@file,add-zm"
+      ## HTTP Services
+      - "traefik.http.routers.zoneminder_test-rtr.service=zoneminder_test-svc"
+      - "traefik.http.services.zoneminder_test-svc.loadbalancer.server.port=80"
+
 ############################# SYSTEM
 
   # Dozzle - Real-time Docker Log Viewer

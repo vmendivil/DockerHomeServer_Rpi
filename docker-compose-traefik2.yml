@@ -323,21 +323,41 @@ services:
       - "traefik.http.routers.dozzle-rtr.service=dozzle-svc"
       - "traefik.http.services.dozzle-svc.loadbalancer.server.port=8080"
 
-############################# MAINTENANCE
+############################# MONITORING
 
-  # Cloudflare DDNS - Dynamic DNS Updater
-  cf-ddns:
-    container_name: cf-ddns
-    image: oznu/cloudflare-ddns:latest
-    restart: always
+  # Netdata - System monitoring
+  netdata:
+    container_name: netdata
+    image: netdata/netdata
+    hostname: $HOST_NAME # set to fqdn of host
+    restart: unless-stopped
+    networks:
+      - t2_proxy
+    ports:
+      - $NETDATA_PORT:19999
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+      - no-new-privileges:true
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
-      - API_KEY=$CLOUDFLARE_API_TOKEN
-      - ZONE=$DOMAINNAME
-      - PROXIED=true
-      - RRTYPE=A
-      - DELETE_ON_STOP=false
-      - DNS_SERVER=1.1.1.1
-  
+      - PGID=$PGID
+    labels:
+      - "traefik.enable=true"
+      ## HTTP Routers
+      - "traefik.http.routers.netdata-rtr.entrypoints=https"
+      - "traefik.http.routers.netdata-rtr.rule=Host(`netdata.$DOMAINNAME`)"
+      - "traefik.http.routers.netdata-rtr.tls=true"
+      ## Middlewares
+      - "traefik.http.routers.netdata-rtr.middlewares=chain-basic-auth@file"
+      ## HTTP Services
+      - "traefik.http.routers.netdata-rtr.service=netdata-svc"
+      - "traefik.http.services.netdata-svc.loadbalancer.server.port=19999"
+
   # Ouroboros - Automatic Docker Container Updates
   ouroboros:
     image: pyouroboros/ouroboros:latest
@@ -355,3 +375,19 @@ services:
       CLEANUP: "true"
       IGNORE: traefik
 #      NOTIFIERS: "tgram://$TGRAM_BOT_TOKEN/$TGRAM_CHAT_ID/"
+
+############################# MAINTENANCE
+
+  # Cloudflare DDNS - Dynamic DNS Updater
+  cf-ddns:
+    container_name: cf-ddns
+    image: oznu/cloudflare-ddns:latest
+    restart: always
+    environment:
+      - API_KEY=$CLOUDFLARE_API_TOKEN
+      - ZONE=$DOMAINNAME
+      - PROXIED=true
+      - RRTYPE=A
+      - DELETE_ON_STOP=false
+      - DNS_SERVER=1.1.1.1
+  

@@ -247,6 +247,8 @@ services:
     container_name: heimdall_local
     image: linuxserver/heimdall:latest
     restart: unless-stopped
+    networks:
+      - t2_proxy
     security_opt:
       - no-new-privileges:true
     ports:
@@ -257,6 +259,17 @@ services:
       - PUID=$PUID
       - PGID=$PGID
       - TZ=$TZ
+    labels:
+      - "traefik.enable=true"
+      ## HTTP Routers
+      - "traefik.http.routers.heimdall_local-rtr.entrypoints=https"
+      - "traefik.http.routers.heimdall_local-rtr.rule=Host(`heimdalllocal.$DOMAINNAME`)"
+      - "traefik.http.routers.heimdall_local-rtr.tls=true"
+      ## Middlewares
+      - "traefik.http.routers.heimdall_local-rtr.middlewares=chain-oauth@file"
+      ## HTTP Services
+      - "traefik.http.routers.heimdall_local-rtr.service=heimdall_local-svc"
+      - "traefik.http.services.heimdall_local-svc.loadbalancer.server.port=80"
 
 ############################# MY OWN SITE: vmendivil.com
 

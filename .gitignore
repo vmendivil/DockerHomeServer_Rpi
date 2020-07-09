@@ -4,6 +4,7 @@
 /fail2ban/
 /myownsite_*/
 /zoneminder*/
+/statping/
 
 ################# Configuration
 #*.env

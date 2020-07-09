@@ -462,6 +462,35 @@ services:
       IGNORE: traefik oauth
 #      NOTIFIERS: "tgram://$TGRAM_BOT_TOKEN/$TGRAM_CHAT_ID/"
 
+  # StatPing 
+  statping:
+    container_name: statping
+    image: eafxx/statping
+    networks:
+      - t2_proxy
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - $STATPING_PORT:8080
+    volumes:
+        - $USERDIR/statping:/app
+    environment:
+        - PUID=$PUID
+        - PGID=$PGID        
+        - TZ=$TZ
+        - SKIPUPDATE=no
+    labels:
+      - "traefik.enable=true"
+      ## HTTP Routers
+      - "traefik.http.routers.statping-rtr.entrypoints=https"
+      - "traefik.http.routers.statping-rtr.rule=Host(`statping.$DOMAINNAME`)"
+      - "traefik.http.routers.statping-rtr.tls=true"
+      ## Middlewares
+      - "traefik.http.routers.statping-rtr.middlewares=chain-oauth@file"
+      ## HTTP Services
+      - "traefik.http.routers.statping-rtr.service=statping-svc"
+      - "traefik.http.services.statping-svc.loadbalancer.server.port=8080"
+
 ############################# MAINTENANCE
 
   # Cloudflare DDNS - Dynamic DNS Updater

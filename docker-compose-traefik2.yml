@@ -491,6 +491,23 @@ services:
       - "traefik.http.routers.statping-rtr.service=statping-svc"
       - "traefik.http.services.statping-svc.loadbalancer.server.port=8080"
 
+#  # WireShark
+#  wireshark:
+#    image: linuxserver/wireshark
+#    container_name: wireshark
+#    cap_add:
+#      - NET_ADMIN
+#    network_mode: host
+#    restart: unless-stopped
+#    environment:
+#      - PUID=$PUID
+#      - PGID=$PGID
+#      - TZ=$TZ
+#    volumes:
+#      - $USERDIR/wireshark:/config
+#    ports:
+#      - $WIRESHARK_PORT:3000
+
 ############################# MAINTENANCE
 
   # Cloudflare DDNS - Dynamic DNS Updater

@@ -5,6 +5,7 @@
 /myownsite_*/
 /zoneminder*/
 /statping/
+/wireshark/
 
 ################# Configuration
 #*.env

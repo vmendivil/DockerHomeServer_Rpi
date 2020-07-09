@@ -486,7 +486,7 @@ services:
       - "traefik.http.routers.statping-rtr.rule=Host(`statping.$DOMAINNAME`)"
       - "traefik.http.routers.statping-rtr.tls=true"
       ## Middlewares
-      - "traefik.http.routers.statping-rtr.middlewares=chain-oauth@file"
+      - "traefik.http.routers.statping-rtr.middlewares=chain-no-auth@file"
       ## HTTP Services
       - "traefik.http.routers.statping-rtr.service=statping-svc"
       - "traefik.http.services.statping-svc.loadbalancer.server.port=8080"

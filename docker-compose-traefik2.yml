@@ -372,7 +372,8 @@ services:
       - "traefik.http.routers.zoneminder_home-rtr.rule=Host(`zoneminderhome.$DOMAINNAME`)"
       - "traefik.http.routers.zoneminder_home-rtr.tls=true"
       ## Middlewares
-      - "traefik.http.routers.zoneminder_home-rtr.middlewares=chain-oauth-zm@file"
+#      - "traefik.http.routers.zoneminder_home-rtr.middlewares=chain-oauth-zm@file"
+      - "traefik.http.routers.zoneminder_home-rtr.middlewares=chain-basic-auth-zm@file"
       ## HTTP Services
       - "traefik.http.routers.zoneminder_home-rtr.service=zoneminder_home-svc"
       - "traefik.http.services.zoneminder_home-svc.loadbalancer.server.port=80"

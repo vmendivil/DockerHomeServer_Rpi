@@ -16,6 +16,8 @@
     - Create "A" record for your domain and your public ip address
     - Create "CNAME" for your subdomain, in this case, "traefik", your address will be: traefik.yourdomain.com
 5) Run docker-compose definition
+    - Navigate the yml file and make sure all existing folders are created
+    - Ensure folders requiring specific permissions are created
     - Run: docker-compose -f docker-compose-traefik2.yml up -d
     - See logs to validate all is correct
         - Run: docker logs -tf --tail="50" traefik

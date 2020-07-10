@@ -466,6 +466,7 @@ services:
   statping:
     container_name: statping
     image: eafxx/statping
+    restart: unless-stopped
     networks:
       - t2_proxy
     security_opt:

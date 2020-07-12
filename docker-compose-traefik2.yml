@@ -316,7 +316,7 @@ services:
     ports:
       - $MYOWNSITE_WORDPRESS:80
     volumes:
-#      - $USERDIR/myownsite_wordpress/config/php.conf.uploads.ini:/usr/local/etc/php/conf.d/uploads.ini # Create file in advance
+      - $USERDIR/myownsite_wordpress/config/php.conf.uploads.ini:/usr/local/etc/php/conf.d/uploads.ini # Create file in advance
       - $USERDIR/myownsite_wordpress/wp-app:/var/www/html # Full wordpress project
     environment:
       WORDPRESS_DB_HOST: myownsite_mariadb
@@ -459,7 +459,7 @@ services:
       LOG_LEVEL: debug
       SELF_UPDATE: "true"
       CLEANUP: "true"
-      IGNORE: traefik oauth
+      IGNORE: traefik oauth myownsite_wordpress myownsite_mariadb
 #      NOTIFIERS: "tgram://$TGRAM_BOT_TOKEN/$TGRAM_CHAT_ID/"
 
   # StatPing 

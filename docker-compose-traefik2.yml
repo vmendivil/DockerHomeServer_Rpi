@@ -309,6 +309,10 @@ services:
   #post_max_size = 64M
   #max_execution_time = 600
 
+  # For development, give wordpress top container folder full access to all users.
+  # Validate permissions, run: ls -ld myownsite_wordpress
+  # Run: sudo chmod -R 777 myownsite_wordpress
+
   myownsite_wordpress:
     container_name: myownsite_wordpress
     image: wordpress:5.4.2

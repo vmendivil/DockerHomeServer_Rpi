@@ -1,5 +1,6 @@
 # Setting up 
 
+0) Make sure to change Open Media Vault to a different port orther than 8080.
 1) Create "docker" folder
     - Run: mkdir ~/docker
     - Run: sudo setfacl -Rdm g:docker:rwx ~/docker

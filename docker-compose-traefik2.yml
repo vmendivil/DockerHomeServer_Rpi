@@ -6,6 +6,8 @@ version: "3.8"
 
 ############################# NETWORKS
 
+# Run: docker network create --gateway 192.168.90.1 --subnet 192.168.90.0/24 t2_proxy
+
 networks:
   t2_proxy:
     external:
@@ -368,7 +370,7 @@ services:
       PGID: $PGID
     volumes:
       - $USERDIR/zoneminder_home:/config
-      - $ZONEMINDER_CACHE/zoneminder_home:/var/cache/zoneminder
+      - $ZONEMINDER_CACHE/Home:/var/cache/zoneminder
     labels:
       - "traefik.enable=true"
       ## HTTP Routers

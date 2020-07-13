@@ -320,7 +320,8 @@ services:
     image: wordpress:5.4.2
     restart: always
     ports:
-      - $MYOWNSITE_WORDPRESS:80
+      - $MYOWNSITE_WORDPRESS_PORT:80
+      # - $MYOWNSITE_WORDPRESS_SSL_PORT:443
     volumes:
       - $USERDIR/myownsite_wordpress/config/php.conf.uploads.ini:/usr/local/etc/php/conf.d/uploads.ini # Create file in advance
       - $USERDIR/myownsite_wordpress/wp-app:/var/www/html # Full wordpress project

@@ -10,9 +10,10 @@
     - Add users to ".htpasswd" (https://www.web2generators.com/apache-tools/htpasswd-generator)
         - If needed, use following command to generate user:password that is already escaped: echo $(htpasswd -nb username mystrongpassword) | sed -e s/\\$/\\$\\$/g
     - Set 600 permission to acme.json file, run: chmod 600 traefik2/acme/acme.json
-3) Create network adapter
+3) Create network adapters
     - Run: docker network create t2_proxy
-        - If you want to define ip addresses, run instead: docker network create --gateway 192.168.90.1 --subnet 192.168.90.0/24 t2_proxy
+        - If you want to define ip addresses, run instead: docker network create --gateway 192.168.90.1 --subnet 192.168.90.0/24 
+    - Run: docker network create myvpn
 4) Configure Cloudflare
     - Create "A" record for your domain and your public ip address
     - Create "CNAME" for your subdomain, in this case, "traefik", your address will be: traefik.yourdomain.com

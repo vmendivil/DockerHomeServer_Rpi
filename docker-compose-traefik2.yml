@@ -12,6 +12,9 @@ networks:
   t2_proxy:
     external:
       name: t2_proxy
+  myvpn:
+    external:
+      name: myvpn
   default:
     driver: bridge
 
@@ -109,6 +112,56 @@ services:
       - "traefik.http.routers.traefik-rtr.service=api@internal"
       ## Middlewares
       - "traefik.http.routers.traefik-rtr.middlewares=chain-oauth@file"
+
+  # Transmission with OpenVpn
+  # Setup: https://www.youtube.com/watch?v=aPkRz0U_IPo
+  transmission-openvpn:
+    image: haugene/transmission-openvpn:latest-armhf
+    container_name: transmission-openvpn
+    restart: always
+    networks:
+      # - t2_proxy
+      - myvpn
+    ports:
+      - "$TRANSMISSIONOPENVPNGUI:9091" # GUI
+      - "$TRANSMISSIONOPENVPN:8888" # Transmission Port
+    devices:
+      - /dev/net/tun # This creates a tunnel for Transmission
+    volumes:
+      - '$USERDIR/transmissionopenvpn:/config'
+      - '$VHMCDIR/Torrent:/data' # Downloads
+      - '/etc/localtime:/etc/localtime:ro'
+    environment:
+      - CREATE_TUN_DEVICE=true
+      - OPENVPN_PROVIDER=$OPENVPN_PROVIDER
+      # - OPENVPN_CONFIG=CA Toronto # can be comma separated
+      - OPENVPN_USERNAME=$OPENVPN_USERNAME
+      - OPENVPN_PASSWORD=$OPENVPN_PASSWORD
+      - WEBPROXY_ENABLED=true # Enable other containers to use the vpn
+      - LOCAL_NETWORK=192.168.1.0/24 # Match the local network of this device
+      - OPENVPN_OPTS=--inactive 3600 --ping 10 --ping-exit 60 # Restart if connection fails
+      - PUID=$PUID
+      - PGID=$PGID
+    cap_add:
+      - NET_ADMIN
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    # labels:
+    #   - "traefik.enable=true"
+    #   ## HTTP Routers
+    #   - "traefik.http.routers.transmission-rtr.entrypoints=https"
+    #   - "traefik.http.routers.transmission-rtr.rule=Host(`transmission.$DOMAINNAME`)"
+    #   - "traefik.http.routers.transmission-rtr.tls=true"
+    #   ## Middlewares
+    #   - "traefik.http.routers.transmission-rtr.middlewares=chain-oauth@file"
+    #   ## HTTP Services
+    #   - "traefik.http.routers.transmission-rtr.service=transmission-svc"
+    #   - "traefik.http.services.transmission-svc.loadbalancer.server.port=80"
 
   ## Fail2ban - Network security against attacks
   ## Some fail2ban commands:

@@ -134,7 +134,7 @@ services:
     environment:
       - CREATE_TUN_DEVICE=true
       - OPENVPN_PROVIDER=$OPENVPN_PROVIDER
-      # - OPENVPN_CONFIG=CA Toronto # can be comma separated
+      # - OPENVPN_CONFIG=CA Toronto # Can be comma separated
       - OPENVPN_USERNAME=$OPENVPN_USERNAME
       - OPENVPN_PASSWORD=$OPENVPN_PASSWORD
       - WEBPROXY_ENABLED=true # Enable other containers to use the vpn
@@ -142,6 +142,20 @@ services:
       - OPENVPN_OPTS=--inactive 3600 --ping 10 --ping-exit 60 # Restart if connection fails
       - PUID=$PUID
       - PGID=$PGID
+      - TRANSMISSION_SCRAPE_PAUSED_TORRENTS_ENABLED=false
+      # Connections
+      - TRANSMISSION_MAX_PEERS_GLOBAL=550
+      - TRANSMISSION_PEER_LIMIT_PER_TORRENT=50
+      - TRANSMISSION_UPLOAD_SLOTS_PER_TORRENT=5
+      - TRANSMISSION_DOWNLOAD_QUEUE_ENABLED=true
+      - TRANSMISSION_DOWNLOAD_QUEUE_SIZE=10
+      # Files
+      - TRANSMISSION_PREALLOCATION=1
+      # Speed
+      - TRANSMISSION_RATIO_LIMIT=2
+      - TRANSMISSION_RATIO_LIMIT_ENABLED=true
+      - TRANSMISSION_SPEED_LIMIT_UP=20
+      - TRANSMISSION_SPEED_LIMIT_UP_ENABLED=true
     cap_add:
       - NET_ADMIN
     logging:

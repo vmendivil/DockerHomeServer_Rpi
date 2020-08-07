@@ -533,7 +533,7 @@ services:
       LOG_LEVEL: debug
       SELF_UPDATE: "true"
       CLEANUP: "true"
-      IGNORE: traefik oauth myownsite_wordpress myownsite_mariadb myownsite_wordpress_staging myownsite_mariadb_staging
+      IGNORE: traefik oauth myownsite_wordpress myownsite_mariadb myownsite_wordpress_staging myownsite_mariadb_staging zoneminder_home
 #      NOTIFIERS: "tgram://$TGRAM_BOT_TOKEN/$TGRAM_CHAT_ID/"
 
   # StatPing 

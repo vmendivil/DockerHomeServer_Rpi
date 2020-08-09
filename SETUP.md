@@ -1,22 +1,38 @@
 # Setting up 
 
 0) Make sure to change Open Media Vault to a different port orther than 8080.
+
 1) Create "docker" folder
     - Run: mkdir ~/docker
     - Run: sudo setfacl -Rdm g:docker:rwx ~/docker
     - Run: sudo chmod -R 775 ~/docker
+
 2) Clone repository with contents under folder created in previous step
     - Create valid version of all *.example files
     - Add users to ".htpasswd" (https://www.web2generators.com/apache-tools/htpasswd-generator)
         - If needed, use following command to generate user:password that is already escaped: echo $(htpasswd -nb username mystrongpassword) | sed -e s/\\$/\\$\\$/g
     - Set 600 permission to acme.json file, run: chmod 600 traefik2/acme/acme.json
+
 3) Create network adapters
-    - Run: docker network create t2_proxy
-        - If you want to define ip addresses, run instead: docker network create --gateway 192.168.90.1 --subnet 192.168.90.0/24 
+    - Run: docker network create t2_proxy --gateway 192.168.90.1 --subnet 192.168.90.0/24 
     - Run: docker network create myvpn
+
 4) Configure Cloudflare
     - Create "A" record for your domain and your public ip address
     - Create "CNAME" for your subdomain, in this case, "traefik", your address will be: traefik.yourdomain.com
+
+4.1) Configure router port forwarding
+    - Setup port forwarding for port 80
+        - External port: 80
+        - Internal port: 80
+        - IP: Rasperry ip
+        - Protocol: TCP
+    - Setup port forwarding for port 443
+        - External port: 443
+        - Internal port: 443
+        - IP: Rasperry ip
+        - Protocol: TCP
+
 5) Run docker-compose definition
     - Navigate the yml file and make sure all existing folders are created
     - Ensure folders requiring specific permissions are created
@@ -24,6 +40,7 @@
     - See logs to validate all is correct
         - Run: docker logs -tf --tail="50" traefik
         - Or instead, open the logs from the container in docker (portainer UI)
+
 6) Make a test
     - Browse for: traefik.yourdomain.com
     - Make sure http authentication is working
@@ -32,6 +49,7 @@
     - Make sure SSL certificates are valid
     - Validate you have data in traefik.log
     - Validate valid data on acme.json
+
 7) Open "docker-compose-traefik2.yml" and comment all aplicable lines after first execution
     - Identify lines marked with initial commments using ##
     - Delete all content of "acme.json"

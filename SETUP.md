@@ -3,6 +3,8 @@
 0) Make sure to change Open Media Vault to a different port orther than 8080.
 
 1) Create "docker" folder
+    - Validate media doesn't have a folder already created if using a previous instance
+        - Run: cd srv/dev*
     - Run: mkdir ~/docker
     - Run: sudo setfacl -Rdm g:docker:rwx ~/docker
     - Run: sudo chmod -R 775 ~/docker

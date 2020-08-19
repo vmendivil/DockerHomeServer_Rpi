@@ -58,7 +58,7 @@ For detailed instructions visit the post of the original author, link in the bot
         - Run: docker logs -tf --tail="50" traefik
         - Or instead, open the logs from the container in docker (portainer UI)
 
-7) Make a test
+7) Test environment
     - Browse to: traefik.yourdomain.com
     - Make sure http authentication is working
     - Make sure is running over https

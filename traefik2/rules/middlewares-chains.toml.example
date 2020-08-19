@@ -14,3 +14,9 @@
   [http.middlewares.chain-authelia]
     [http.middlewares.chain-authelia.chain]
       middlewares = [ "middlewares-rate-limit", "middlewares-secure-headers", "middlewares-authelia"]
+
+  # Zoneminder
+
+  [http.middlewares.chain-playground-zm]
+    [http.middlewares.chain-playground-zm.chain]
+      middlewares = [ "middlewares-rate-limit", "middlewares-secure-headers", "strip-zm", "add-zm"]

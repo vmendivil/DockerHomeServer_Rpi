@@ -60,3 +60,13 @@
       address = "http://authelia:9091/api/verify?rd=https://authelia.example.com"
       trustForwardHeader = true
       authResponseHeaders = ["Remote-User", "Remote-Groups"]
+
+  # Zoneminder
+
+  [http.middlewares.add-zm]
+    [http.middlewares.add-zm.addPrefix]
+      prefix = "/zm"
+
+  [http.middlewares.strip-zm]
+    [http.middlewares.strip-zm.stripPrefix]
+      prefixes = ["/zm"]

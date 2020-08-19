@@ -1,1 +1,0 @@
-> Configure network adapter to properly set all its parameters

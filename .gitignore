@@ -2,7 +2,7 @@
 /heimdall*/
 /portainer/
 /fail2ban/
-#/myownsite_*/
+/myownsite_*/
 /zoneminder*/
 /statping/
 /wireshark/
@@ -16,5 +16,5 @@ traefik2/rules/middlewares-chains.toml
 traefik2/acme/acme.json
 traefik2/traefik.log
 
-################# Config files from ignored folders
-!myownsite_wordpress/config/php.conf.uploads.ini.example
+################# Include files from ignored folders
+!/myownsite_wordpress/config/php.conf.uploads.ini.example

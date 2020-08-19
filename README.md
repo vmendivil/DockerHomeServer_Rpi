@@ -44,6 +44,14 @@ For detailed instructions visit the post of the original author, link in the bot
 
 6) Run docker-compose definition
     - Validate all environment folder locations in yaml file are created
+    - Validate all environment files are properly created, some of them:
+        - Traefik:
+            - Create final file based on *.example files
+        - shared/.htpasswd
+        - .env
+        - Wordpress:
+            - config/php.conf.uploads.ini
+        - Check for additional files to be created on yml file, otherwise error will be displayed when deploying
     - Ensure folders requiring specific permissions are created
     - Create containers, run: docker-compose -f docker-compose-traefik2.yml up -d
     - See logs to validate all is correct
@@ -70,13 +78,13 @@ For detailed instructions visit the post of the original author, link in the bot
 - Google OAuth: https://www.smarthomebeginner.com/google-oauth-with-traefik-2-docker/
 
 Sample files: 
-    .env: https://github.com/htpcBeginner/docker-traefik/blob/master/.env.example
-    .bash_aliases: https://github.com/htpcBeginner/docker-traefik/blob/master/.bash_aliases.example
+    - .env: https://github.com/htpcBeginner/docker-traefik/blob/master/.env.example
+    - .bash_aliases: https://github.com/htpcBeginner/docker-traefik/blob/master/.bash_aliases.example
 
 ## YML Files
 
-    https://github.com/htpcBeginner/docker-traefik
-    https://github.com/CVJoint/traefik2
+- https://github.com/htpcBeginner/docker-traefik
+- https://github.com/CVJoint/traefik2
 
 ## Acknowledgments and References
 

@@ -78,8 +78,8 @@ For detailed instructions visit the post of the original author, link in the bot
 - Google OAuth: https://www.smarthomebeginner.com/google-oauth-with-traefik-2-docker/
 
 Sample files: 
-    - .env: https://github.com/htpcBeginner/docker-traefik/blob/master/.env.example
-    - .bash_aliases: https://github.com/htpcBeginner/docker-traefik/blob/master/.bash_aliases.example
+- .env: https://github.com/htpcBeginner/docker-traefik/blob/master/.env.example
+- .bash_aliases: https://github.com/htpcBeginner/docker-traefik/blob/master/.bash_aliases.example
 
 ## YML Files
 

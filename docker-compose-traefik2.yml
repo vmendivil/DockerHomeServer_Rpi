@@ -388,7 +388,7 @@ services:
 
   myownsite_wordpress:
     container_name: myownsite_wordpress
-    image: wordpress:5.4.2
+    image: wordpress:5.5
     restart: always
     ports:
       - $MYOWNSITE_WORDPRESS_PORT:80
@@ -441,7 +441,7 @@ services:
       PUID: $PUID
       PGID: $PGID
     volumes:
-      - $USERDIR/zoneminder_home:/config
+      - $VHMCDIR/zoneminder/home:/config
       - $ZONEMINDER_CACHE/Home:/var/cache/zoneminder
     labels:
       - "traefik.enable=true"

@@ -344,7 +344,7 @@ services:
       - "traefik.http.routers.heimdall_local-rtr.service=heimdall_local-svc"
       - "traefik.http.services.heimdall_local-svc.loadbalancer.server.port=80"
 
-############################# MY OWN SITE: vmendivil.com
+############################# MY OWN SITE
 
   # MariaDB
   myownsite_mariadb:

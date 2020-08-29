@@ -106,8 +106,8 @@ services:
 #      - "traefik.http.routers.traefik-rtr.tls.certresolver=dns-cloudflare" # Comment out this line after first run of traefik to force the use of wildcard certs
       - "traefik.http.routers.traefik-rtr.tls.domains[0].main=$DOMAINNAME"
       - "traefik.http.routers.traefik-rtr.tls.domains[0].sans=*.$DOMAINNAME"
-#      - "traefik.http.routers.traefik-rtr.tls.domains[1].main=$SECONDDOMAINNAME" # Pulls main cert for second domain
-#      - "traefik.http.routers.traefik-rtr.tls.domains[1].sans=*.$SECONDDOMAINNAME" # Pulls wildcard cert for second domain
+      - "traefik.http.routers.traefik-rtr.tls.domains[1].main=$DOMAINNAME_BLOG"
+      - "traefik.http.routers.traefik-rtr.tls.domains[1].sans=*.$DOMAINNAME_BLOG"
       ## Services - API
       - "traefik.http.routers.traefik-rtr.service=api@internal"
       ## Middlewares
@@ -344,7 +344,7 @@ services:
       - "traefik.http.routers.heimdall_local-rtr.service=heimdall_local-svc"
       - "traefik.http.services.heimdall_local-svc.loadbalancer.server.port=80"
 
-############################# MY OWN SITE
+############################# MY OWN SITE: MAIN DOMAIN
 
   # MariaDB
   myownsite_mariadb:
@@ -416,6 +416,81 @@ services:
       - myownsite_mariadb
     links:
       - myownsite_mariadb
+    networks:
+      - t2_proxy
+
+############################# BLOG: SECOND DOMAIN
+
+  # MariaDB
+  blog_mariadb:
+    container_name: blog_mariadb
+    image: linuxserver/mariadb:latest
+    restart: always
+    networks:
+      # - default
+      # t2_proxy:
+      #   ipv4_address: 192.168.90.250
+      - t2_proxy
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "$BLOG_MARIADB_PORT:3306"
+    volumes:
+      - $USERDIR/blog_mariadb/data:/config
+      - $USERDIR/blog_mariadb/mysql:/var/lib/mysql
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - MYSQL_ROOT_PASSWORD=$MARIADB_BLOG_ROOT_PASSWORD
+      - MYSQL_DATABASE=$WORDPRESS_BLOG_DB_NAME
+      - MYSQL_USER=$WORDPRESS_BLOG_DB_USER
+      - MYSQL_PASSWORD=$WORDPRESS_BLOG_DB_PASSWORD
+
+  # WordPress
+
+  # Create file (volumes) php.conf.uploads.ini and paste below content before container creation:
+  #file_uploads = On
+  #memory_limit = 64M
+  #upload_max_filesize = 64M
+  #post_max_size = 64M
+  #max_execution_time = 600
+
+  # For development, give wordpress top container folder full access to all users.
+  # Validate permissions, run: ls -ld blog_wordpress
+  # Run: sudo chmod -R 777 blog_wordpress
+
+  blog_wordpress:
+    container_name: blog_wordpress
+    image: wordpress:5.5
+    restart: always
+    ports:
+      - $BLOG_WORDPRESS_PORT:80
+      # - $BLOG_WORDPRESS_SSL_PORT:443
+    volumes:
+      - $USERDIR/blog_wordpress/config/php.conf.uploads.ini:/usr/local/etc/php/conf.d/uploads.ini # Create file in advance
+      - $USERDIR/blog_wordpress/wp-app:/var/www/html # Full wordpress project
+    environment:
+      WORDPRESS_DB_HOST: blog_mariadb
+      WORDPRESS_DB_NAME: $WORDPRESS_BLOG_DB_NAME
+      WORDPRESS_DB_USER: $WORDPRESS_BLOG_DB_USER
+      WORDPRESS_DB_PASSWORD: $WORDPRESS_BLOG_DB_PASSWORD
+    labels:
+      - "traefik.enable=true"
+      ## HTTP Routers
+      - "traefik.http.routers.blog_wordpress-rtr.entrypoints=https"
+      - "traefik.http.routers.blog_wordpress-rtr.rule=Host(`$DOMAINNAME_BLOG`,`www.$DOMAINNAME_BLOG`)"
+      - "traefik.http.routers.blog_wordpress-rtr.tls=true"
+      ## Middlewares
+      - "traefik.http.routers.blog_wordpress-rtr.middlewares=chain-no-auth@file"
+      ## HTTP Services
+      - "traefik.http.routers.blog_wordpress-rtr.service=blog_wordpress-svc"
+      - "traefik.http.services.blog_wordpress-svc.loadbalancer.server.port=80"
+    depends_on:
+      - blog_mariadb
+    links:
+      - blog_mariadb
     networks:
       - t2_proxy
 
@@ -537,7 +612,7 @@ services:
       LOG_LEVEL: debug
       SELF_UPDATE: "true"
       CLEANUP: "true"
-      IGNORE: traefik oauth myownsite_wordpress myownsite_mariadb myownsite_wordpress_staging myownsite_mariadb_staging zoneminder_home
+      IGNORE: traefik oauth myownsite_wordpress myownsite_mariadb myownsite_wordpress_staging myownsite_mariadb_staging zoneminder_home blog_wordpress blog_mariadb
 #      NOTIFIERS: "tgram://$TGRAM_BOT_TOKEN/$TGRAM_CHAT_ID/"
 
   # StatPing 

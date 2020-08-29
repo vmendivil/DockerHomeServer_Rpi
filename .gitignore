@@ -7,6 +7,7 @@
 /statping/
 /wireshark/
 /transmissionopenvpn/
+/blog_*/
 
 ################# Configuration
 .env
@@ -18,3 +19,4 @@ traefik2/traefik.log
 
 ################# Include files from ignored folders
 !/myownsite_wordpress/config/php.conf.uploads.ini.example
+!/blog_wordpress/config/php.conf.uploads.ini.example

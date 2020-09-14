@@ -238,7 +238,7 @@ services:
       - WHITELIST=$OAUTH_EMAIL_1,$OAUTH_EMAIL_2,$OAUTH_EMAIL_3 # email1,email2,email3 or $EMAIL1,$EMAIL2,$EMAIL3
       - LOG_LEVEL=warn
       - LOG_FORMAT=text
-      - LIFETIME=2592000 # 30 days (seconds)
+      - LIFETIME=$OAUTH_SESSION_LIFETIME
       - DEFAULT_ACTION=auth
       - DEFAULT_PROVIDER=google
     labels:
@@ -344,6 +344,61 @@ services:
       - "traefik.http.routers.heimdall_local-rtr.service=heimdall_local-svc"
       - "traefik.http.services.heimdall_local-svc.loadbalancer.server.port=80"
 
+############################# NEXTCLOUD
+
+  # MariaDB
+  nextcloud_mariadb:
+    container_name: nextcloud_mariadb
+    image: linuxserver/mariadb:latest
+    #command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    restart: always
+    networks:
+      - t2_proxy
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - $NEXTCLOUDMARIADB:3306
+    volumes:
+      - $USERDIR/nextcloud_mariadb/data:/config
+      - $USERDIR/nextcloud_mariadb/mysql:/var/lib/mysql
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - MYSQL_ROOT_PASSWORD=$MARIADB_ROOT_PASSWORD_NEXTCLOUD
+      - MYSQL_DATABASE=$MARIADB_DATABASE_NEXTCLOUD
+      - MYSQL_USER=$MARIADB_USER_NEXTCLOUD
+      - MYSQL_PASSWORD=$MARIADB_PASSWORD_NEXTCLOUD
+
+  # NextCloud
+  nextcloud:
+    container_name: nextcloud
+    image: nextcloud
+    networks:
+      - t2_proxy
+    restart: always
+    ports:
+      - $NEXTCLOUD:80
+    depends_on:
+      - nextcloud_mariadb
+    links:
+      - nextcloud_mariadb
+    volumes:
+      - $USERDIR/nextcloud:/var/www/html
+      - $NEXTCLOUDDATA/data:/var/www/html/data
+    labels:
+      - "traefik.enable=true"
+      ## HTTP Routers
+      - "traefik.http.routers.nextcloud-rtr.entrypoints=https"
+      - "traefik.http.routers.nextcloud-rtr.rule=Host(`nextcloud.$DOMAINNAME`)"
+      - "traefik.http.routers.nextcloud-rtr.tls=true"
+      ## Middlewares
+      - "traefik.http.routers.nextcloud-rtr.middlewares=chain-no-auth@file"
+      ## HTTP Services
+      - "traefik.http.routers.nextcloud-rtr.service=nextcloud-svc"
+      - "traefik.http.services.nextcloud-svc.loadbalancer.server.port=80"
+    
 ############################# MY OWN SITE: MAIN DOMAIN
 
   # MariaDB

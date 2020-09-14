@@ -8,6 +8,7 @@
 /wireshark/
 /transmissionopenvpn/
 /blog_*/
+/nextcloud*/
 
 ################# Configuration
 .env

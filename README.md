@@ -53,10 +53,12 @@ For detailed instructions visit the post of the original author, link in the bot
             - config/php.conf.uploads.ini
         - Check for additional files to be created on yml file, otherwise error will be displayed when deploying
     - Ensure folders requiring specific permissions are created
+    - Before first time execution, uncomment lines with ##
     - Create containers, run: docker-compose -f docker-compose-traefik2.yml up -d
     - See logs to validate all is correct
         - Run: docker logs -tf --tail="50" traefik
         - Or instead, open the logs from the container in docker (portainer UI)
+    - Comment back lines with ##
 
 7) Test environment
     - Browse to: traefik.yourdomain.com

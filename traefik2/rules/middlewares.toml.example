@@ -70,3 +70,7 @@
   [http.middlewares.strip-zm]
     [http.middlewares.strip-zm.stripPrefix]
       prefixes = ["/zm"]
+
+  # Enable gzip compression
+  [http.middlewares.compress-response]
+    [http.middlewares.compress-response.compress]

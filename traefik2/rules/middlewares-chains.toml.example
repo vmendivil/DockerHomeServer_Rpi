@@ -1,22 +1,22 @@
 [http.middlewares]
   [http.middlewares.chain-no-auth]
     [http.middlewares.chain-no-auth.chain]
-      middlewares = [ "middlewares-rate-limit", "middlewares-secure-headers"]
+      middlewares = [ "middlewares-rate-limit", "middlewares-secure-headers", "compress-response" ]
 
   [http.middlewares.chain-basic-auth]
     [http.middlewares.chain-basic-auth.chain]
-      middlewares = [ "middlewares-rate-limit", "middlewares-secure-headers", "middlewares-basic-auth"]
+      middlewares = [ "middlewares-rate-limit", "middlewares-secure-headers", "middlewares-basic-auth", "compress-response" ]
 
   [http.middlewares.chain-oauth]
     [http.middlewares.chain-oauth.chain]
-      middlewares = [ "middlewares-rate-limit", "middlewares-secure-headers", "middlewares-oauth"]
+      middlewares = [ "middlewares-rate-limit", "middlewares-secure-headers", "middlewares-oauth", "compress-response" ]
 
   [http.middlewares.chain-authelia]
     [http.middlewares.chain-authelia.chain]
-      middlewares = [ "middlewares-rate-limit", "middlewares-secure-headers", "middlewares-authelia"]
+      middlewares = [ "middlewares-rate-limit", "middlewares-secure-headers", "middlewares-authelia", "compress-response" ]
 
   # Zoneminder
 
-  [http.middlewares.chain-playground-zm]
-    [http.middlewares.chain-playground-zm.chain]
-      middlewares = [ "middlewares-rate-limit", "middlewares-secure-headers", "strip-zm", "add-zm"]
+  [http.middlewares.chain-zoneminder]
+    [http.middlewares.chain-zoneminder.chain]
+      middlewares = [ "middlewares-rate-limit", "middlewares-secure-headers", "strip-zm", "add-zm", "compress-response" ]

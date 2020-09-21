@@ -18,6 +18,8 @@ traefik2/rules/middlewares-chains.toml
 traefik2/acme/acme.json
 traefik2/traefik.log
 
+traefik2/rules/openmediavault-service.toml
+
 ################# Include files from ignored folders
 !/myownsite_wordpress/config/php.conf.uploads.ini.example
 !/blog_wordpress/config/php.conf.uploads.ini.example

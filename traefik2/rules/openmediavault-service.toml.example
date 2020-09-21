@@ -1,0 +1,18 @@
+# Open Media Vault
+
+[http.routers]
+  [http.routers.omv-rtr]
+      entryPoints = ["https"]
+      rule = "Host(`omv.vmendivil.com`)"
+      service = "omv-svc"
+      # middlewares = ["chain-oauth", "another-middleware-if-needed"]
+      middlewares = ["chain-oauth"]
+      [http.routers.omv-rtr.tls]
+        certresolver = "dns-cloudflare"
+
+[http.services]
+  [http.services.omv-svc]
+    [http.services.omv-svc.loadBalancer]
+      passHostHeader = true
+      [[http.services.omv-svc.loadBalancer.servers]]
+        url = "http://192.168.1.100:8081" # or whatever your external host's IP:port is

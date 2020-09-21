@@ -42,11 +42,11 @@ services:
 #      - --api.insecure=true
 #      - --serversTransport.insecureSkipVerify=true
       - --log=true
-      - --log.level=DEBUG # (Default: error) DEBUG, INFO, WARN, ERROR, FATAL, PANIC
+      - --log.level=INFO # (Default: error) DEBUG, INFO, WARN, ERROR, FATAL, PANIC
       - --accessLog=true
       - --accessLog.filePath=/traefik.log
       - --accessLog.bufferingSize=100 # Configuring a buffer of 100 lines
-      - --accessLog.filters.statusCodes=400-499
+      #- --accessLog.filters.statusCodes=400-499
       - --providers.docker=true
       - --providers.docker.endpoint=unix:///var/run/docker.sock
       - --providers.docker.defaultrule=Host(`{{ index .Labels "com.docker.compose.service" }}.$DOMAINNAME`)
@@ -103,7 +103,7 @@ services:
       - "traefik.http.routers.traefik-rtr.rule=Host(`traefik.$DOMAINNAME`)"
       - "traefik.http.routers.traefik-rtr.tls=true"
 ##    Comment below line after first execution
-#      - "traefik.http.routers.traefik-rtr.tls.certresolver=dns-cloudflare" # Comment out this line after first run of traefik to force the use of wildcard certs
+#      - "traefik.http.routers.traefik-rtr.tls.certresolver=dns-cloudflare" # Comment out this line after first run of traefik to force the use of wildcard certs. Ensure acme.json has data for all domains before commenting.
       - "traefik.http.routers.traefik-rtr.tls.domains[0].main=$DOMAINNAME"
       - "traefik.http.routers.traefik-rtr.tls.domains[0].sans=*.$DOMAINNAME"
       - "traefik.http.routers.traefik-rtr.tls.domains[1].main=$DOMAINNAME_BLOG"
@@ -235,7 +235,7 @@ services:
       - AUTH_HOST=oauth.$DOMAINNAME
       - URL_PATH=/_oauth # must match url defined in google web application
       - WHITELIST=$OAUTH_EMAIL_1,$OAUTH_EMAIL_2,$OAUTH_EMAIL_3 # email1,email2,email3 or $EMAIL1,$EMAIL2,$EMAIL3
-      - LOG_LEVEL=warn
+      - LOG_LEVEL=info
       - LOG_FORMAT=text
       - LIFETIME=$OAUTH_SESSION_LIFETIME
       - DEFAULT_ACTION=auth

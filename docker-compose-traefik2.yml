@@ -63,9 +63,6 @@ services:
       - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.provider=cloudflare
       - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.resolvers=1.1.1.1:53,1.0.0.1:53
     networks:
-#      t2_proxy:
-#        ipv4_address: 192.168.90.254 # You can specify a static IP
-    networks:
       - t2_proxy
     security_opt:
       - no-new-privileges:true
@@ -103,7 +100,7 @@ services:
       - "traefik.http.routers.traefik-rtr.rule=Host(`traefik.$DOMAINNAME`)"
       - "traefik.http.routers.traefik-rtr.tls=true"
 ##    Comment below line after first execution
-#      - "traefik.http.routers.traefik-rtr.tls.certresolver=dns-cloudflare" # Comment out this line after first run of traefik to force the use of wildcard certs. Ensure acme.json has data for all domains before commenting.
+      - "traefik.http.routers.traefik-rtr.tls.certresolver=dns-cloudflare" # Comment out this line after first run of traefik to force the use of wildcard certs. Ensure acme.json has data for all domains before commenting.
       - "traefik.http.routers.traefik-rtr.tls.domains[0].main=$DOMAINNAME"
       - "traefik.http.routers.traefik-rtr.tls.domains[0].sans=*.$DOMAINNAME"
       - "traefik.http.routers.traefik-rtr.tls.domains[1].main=$DOMAINNAME_BLOG"
@@ -461,6 +458,7 @@ services:
       - "traefik.http.routers.myownsite_wordpress-rtr.entrypoints=https"
       - "traefik.http.routers.myownsite_wordpress-rtr.rule=Host(`myownsite.$DOMAINNAME`,`$DOMAINNAME`,`www.$DOMAINNAME`)"
       - "traefik.http.routers.myownsite_wordpress-rtr.tls=true"
+      - "traefik.http.routers.myownsite_wordpress-rtr.tls.certresolver=dns-cloudflare"
       ## Middlewares
       - "traefik.http.routers.myownsite_wordpress-rtr.middlewares=chain-no-auth@file"
       ## HTTP Services

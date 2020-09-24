@@ -126,7 +126,7 @@ services:
       - /dev/net/tun # This creates a tunnel for Transmission
     volumes:
       - '$DOCKERDIR/transmissionopenvpn:/config'
-      - '$PERMDIR/Torrent:/data' # Downloads
+      - '$DOCKERDIR/torrent:/data' # Downloads
       - '/etc/localtime:/etc/localtime:ro'
     environment:
       - CREATE_TUN_DEVICE=true
@@ -382,7 +382,7 @@ services:
       - nextcloud_mariadb
     volumes:
       - $DOCKERDIR/nextcloud:/var/www/html
-      - $NEXTCLOUDDATADIR/data:/var/www/html/data
+      - $NEXTCLOUDDATADIR/nextcloud_data/home:/var/www/html/data
     labels:
       - "traefik.enable=true"
       ## HTTP Routers
@@ -568,8 +568,8 @@ services:
       PUID: $PUID
       PGID: $PGID
     volumes:
-      - $PERMDIR/zoneminder/home:/config
-      - $ZMCACHEDIR/Home:/var/cache/zoneminder
+      - $DOCKERDIR/zoneminder/home:/config
+      - $ZMCACHEDIR/zoneminder_video/home:/var/cache/zoneminder
     labels:
       - "traefik.enable=true"
       ## HTTP Routers

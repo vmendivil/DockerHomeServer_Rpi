@@ -9,6 +9,7 @@
 /transmissionopenvpn/
 /blog_*/
 /nextcloud*/
+/torrent/
 
 ################# Configuration
 .env

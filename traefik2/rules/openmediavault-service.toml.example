@@ -3,7 +3,7 @@
 [http.routers]
   [http.routers.omv-rtr]
       entryPoints = ["https"]
-      rule = "Host(`omv.vmendivil.com`)"
+      rule = "Host(`omv.yourdomain.com`)"
       service = "omv-svc"
       # middlewares = ["chain-oauth", "another-middleware-if-needed"]
       middlewares = ["chain-oauth"]

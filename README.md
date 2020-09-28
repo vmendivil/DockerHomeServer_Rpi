@@ -1,3 +1,7 @@
+# NEW REPO #
+
+This repo is archived, new repo in following URL: https://github.com/vmendivil/traefik2
+
 # DockerMediaServer
 
 Some docker images have specific tag for ARM architecture since they are intended to run on a Raspberry Pi 4.
